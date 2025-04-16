@@ -1,12 +1,16 @@
-import { View, Text, StyleSheet, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, Dimensions, Share, TouchableOpacity, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import React, { useEffect, useState } from 'react';
-import { Call, CallContent, StreamCall, useStreamVideoClient } from '@stream-io/video-react-native-sdk';
+import { Call, CallContent, StreamCall, useStreamVideoClient, useCallStateHooks, StreamVideoEvent } from '@stream-io/video-react-native-sdk';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { useLocalSearchParams, useNavigation, useRouter } from 'expo-router';
 import CustomCallControls from '@/components/CustomCallControls';
 import { ScrollView } from 'react-native-gesture-handler';
 import ChatView from '@/components/ChatView';
 import CustomBottomSheet from '@/components/CustomBotoomSheet';
+import CustomTopView from '@/components/CustomTopView';
+import { Ionicons } from '@expo/vector-icons';
+import Toast from 'react-native-toast-message';
+import Colors from '@/constants/Colors';
 
 
 const Page = () => {
@@ -17,7 +21,10 @@ const Page = () => {
     const client = useStreamVideoClient();
     const [call, setCall] = useState<Call | null>(null);
     const { id } = useLocalSearchParams<{ id: string}>();
+
     const router = useRouter();
+    const navigation = useNavigation();
+    
 
     useEffect(() => {
         if(!client || call) return;
@@ -29,12 +36,56 @@ const Page = () => {
             setCall(call);
         }
         joinCall();
-    }, [call])
+    }, [call]);
+
+    useEffect(() => {
+		navigation.setOptions({
+			headerRight: () => (
+				<TouchableOpacity onPressOut={shareMeeting}>
+					<Ionicons name="share-outline" size={24} color={Colors.tertiary} />
+				</TouchableOpacity>
+			)
+		});
+
+		// Listen to call events
+		const unsubscribe = client!.on('all', (event: StreamVideoEvent) => {
+			//console.log(event);
+
+			if (event.type === 'call.session_participant_joined') {
+				console.log(`New user joined the call: ${event.participant.user_session_id}`);
+				const user = event.participant.user.name;
+				Toast.show({
+					text1: 'User joined',
+					text2: `Say hello to ${user}`
+				});
+			}
+
+			if (event.type === 'call.session_participant_left') {
+				console.log(`Someone left the call: ${event.participant}`);
+				const user = event.participant.user.name;
+				Toast.show({
+					text1: 'User left',
+					text2: `Say goodbye to ${user}`
+				});
+			}
+		});
+
+		// Stop the listener when the component unmounts
+		return () => {
+			unsubscribe();
+		};
+	}, []);
 
     const goToHomeScreen = async() => {
         
         router.back();
     }
+
+    const shareMeeting = async () => {
+		Share.share({
+			message: `Join my meeting with this code: ${id}`
+		});
+	};
 
     if(!call) return null;
 
@@ -43,17 +94,24 @@ const Page = () => {
       <Spinner visible={!call}/>
 
       <StreamCall call={call}>
-        <View style={styles.container}>
-        <CallContent onHangupCallHandler={goToHomeScreen} CallControls={CustomCallControls}/>
-        {WIDTH > HEIGHT ? (
-            <View style={styles.chatContainer}>
-            <ChatView channelId={id} />
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={true}>
+            <View style={styles.container}>
+                
+                <CallContent 
+                    onHangupCallHandler={goToHomeScreen} 
+                    CallControls={CustomCallControls} 
+                    layout="grid">
+                </CallContent>
+                {WIDTH > HEIGHT ? (
+                    <View style={styles.chatContainer}>
+                        <ChatView channelId={id} />
+                    </View>
+                ) : (
+                    <CustomBottomSheet channelId={id}/>
+                )}
+                
             </View>
-        ) : (
-            <CustomBottomSheet channelId={id}/>
-        )}
-            
-        </View>
+        </TouchableWithoutFeedback>
     </StreamCall>
     </View>
   )
@@ -73,6 +131,7 @@ const styles = StyleSheet.create({
         fontSize: 20,
         fontWeight: 'bold',
     },
+    
 
 })
 
