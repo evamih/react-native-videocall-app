@@ -1,12 +1,14 @@
 import { Alert, ScrollView, Text, TouchableOpacity, View, StyleSheet, Dimensions } from 'react-native'
-import React, { Component } from 'react'
+import React, { Component, useEffect, useState } from 'react'
 import Colors from '@/constants/Colors';
 import { Ionicons } from '@expo/vector-icons';
-import { useAuth } from '@/context/AuthContext';
 import { rooms } from '@/assets/data/publicRooms';
 import { Link, useRouter } from 'expo-router';
 import { ImageBackground } from 'stream-chat-expo';
 import prompt from 'react-native-prompt-android';
+import Device from 'expo-device';
+
+import { getFavorites } from '@/app/utils/AsyncStorage';
 
 const WIDTH = Dimensions.get('window').width;
 const HEIGHT = Dimensions.get('window').height;
@@ -14,7 +16,17 @@ const HEIGHT = Dimensions.get('window').height;
 const Page = () =>{
 
   const router = useRouter();
-  
+  const [favorites, setFavorites] = useState<{ id: string; name: string; photo: string }[]>([]);
+  //const {favorites} = useFavorites();
+
+  useEffect(() => {
+    const loadFavorites = async () => {
+        const storedFavorites = await getFavorites();
+        setFavorites(storedFavorites);
+    };
+    loadFavorites();
+  }, []);
+
   const onStartMeeting = async () => {
           console.log("starting new meeting");
           const randomId = Math.floor(Math.random() * 1000000).toString();
@@ -71,6 +83,39 @@ const Page = () =>{
             </Link>
           ))}
         </View>
+
+        {favorites.length > 0 && (
+        <>
+          <View style={styles.divider}>
+            <View style={{ flex: 1, height: StyleSheet.hairlineWidth, backgroundColor: Colors.victoria }} />
+            <Text style={{ fontSize: 18, color: Colors.victoria, fontWeight: 'condensedBold' }}>your saved meetings</Text>
+            <View style={{ flex: 1, height: StyleSheet.hairlineWidth, backgroundColor: Colors.victoria }} />
+          </View>
+          <View style={styles.wrapper}>
+            {favorites.map((favorite, index) => (
+              <TouchableOpacity
+                key={index}
+                onPress={() =>
+                  router.push({
+                    pathname: '/(inside)/(room)/[id]',
+                    params: { id: favorite.id },
+                  })
+                }
+              >
+                <ImageBackground
+                  source={{ uri: favorite.photo }}
+                  style={styles.image}
+                  imageStyle={{ borderRadius: 5 }}
+                >
+                  <View style={styles.overlay}>
+                    <Text style={styles.text}>{favorite.name}</Text>
+                  </View>
+                </ImageBackground>
+              </TouchableOpacity>
+            ))}
+          </View>
+        </>
+      )}
       </ScrollView>
     );
 }

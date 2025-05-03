@@ -7,6 +7,7 @@ import { AuthProvider, useAuth } from "@/context/AuthContext";
 import { StreamVideoClient, StreamVideo, User } from "@stream-io/video-react-native-sdk";
 import { OverlayProvider } from 'stream-chat-expo';
 import Toast from "react-native-toast-message";
+import { FavoritesProvider } from "@/context/FavoriteContext";
 
 const STREAM_KEY = process.env.EXPO_PUBLIC_STREAM_ACCESS_KEY;
 
@@ -78,11 +79,13 @@ const InitialLayout = () => {
 
 const RootLayout = () =>  {
     return (
-        <AuthProvider>
-            <GestureHandlerRootView style={{ flex: 1 }}>
-                <InitialLayout/>
-            </GestureHandlerRootView>
-        </AuthProvider>
+        <FavoritesProvider>
+            <AuthProvider>
+                <GestureHandlerRootView style={{ flex: 1 }}>
+                    <InitialLayout/>
+                </GestureHandlerRootView>
+            </AuthProvider>
+        </FavoritesProvider>
     );
 }
 

@@ -1,5 +1,5 @@
-import { View, Text, StyleSheet, KeyboardAvoidingView, Platform, Image, TouchableOpacity, Dimensions, Alert } from 'react-native';
-import React, { useState } from 'react';
+import { Animated, Text, StyleSheet, KeyboardAvoidingView, Platform, Image, TouchableOpacity, Dimensions, Alert } from 'react-native';
+import React, { useState, useRef, useEffect } from 'react';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { TextInput } from 'react-native-gesture-handler';
 import Colors from '@/constants/Colors';
@@ -15,6 +15,7 @@ const Page = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const { onLogin, onRegister } = useAuth(); //useAuth is the custom hook that returns the auth context
+
 
     //functions:
     const onSignInPress = async () => {
@@ -34,7 +35,7 @@ const Page = () => {
             const response = await onRegister!(email, password);
             console.log(" onSignUpPress - response: ", response);
         } catch (error) {
-            Alert.alert('Error', 'Registration failed. Please try again.');
+            Alert.alert('Error', 'Registration failed. Please try again.'+ error);
         } finally {
             setLoading(false);
         }
@@ -45,11 +46,12 @@ const Page = () => {
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'} 
             style={styles.container}>
             <Spinner visible={loading}/>
+            
             <Image style={styles.logo} source={require('@/assets/images/logo.png')} />
             <Text style={styles.header}>Log in</Text>
             <Text style={styles.subHeader}>Welcome to appli :3 !</Text>
             <TextInput
-                placeholder='eva@mail.com'
+                placeholder='ceva@mail.com'
                 value={email}
                 onChangeText={setEmail}
                 style={styles.inputField}

@@ -30,26 +30,26 @@ const Layout = () => {
       };
           
   return (
-    <Stack screenOptions={{
-        headerStyle: {
-            backgroundColor: Colors.secondary
-        },
-        headerTintColor: Colors.tertiary,
-    }}>
-        <Stack.Screen name="index" options={{ 
-            title: 'Meeting rooms',
-            header: () => (
-                
-                <View style={styles.header}>
-                    <Text style={styles.headerText}>Meeting rooms</Text>
-                    <Pressable style={styles.icon} onPress={handleLogout}>
-                        <Ionicons name="log-out-outline" size={34} color={Colors.tertiary} />
-                    </Pressable>
-                </View>
-                
-            ), }} />
-        <Stack.Screen name="(room)/[id]" options={{ title: 'Room' }} />
-    </Stack>
+        <Stack screenOptions={{
+            headerStyle: {
+                backgroundColor: Colors.secondary
+            },
+            headerTintColor: Colors.tertiary,
+        }}>
+            <Stack.Screen name="index" options={{ 
+                title: 'Meeting rooms',
+                header: () => (
+                    
+                    <View style={styles.header}>
+                        <Text style={styles.headerText}>Meeting rooms</Text>
+                        <Pressable style={styles.icon} onPress={handleLogout}>
+                            <Ionicons name="log-out-outline" size={34} color={Colors.tertiary} />
+                        </Pressable>
+                    </View>
+                    
+                ), }} />
+            <Stack.Screen name="(room)/[id]" options={{ title: 'Room' }} />
+        </Stack>
   );
 };
 
