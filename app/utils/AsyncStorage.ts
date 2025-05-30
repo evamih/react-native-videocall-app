@@ -2,7 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const FAVORITES_KEY = 'favorites';
 
-export const saveFavorites = async (favorites: { id: string; name: string; photo: string }[]) => {
+export const saveFavorites = async (favorites: { id: string; name: string; photo: string; userId: string }[]) => {
     try {
         await AsyncStorage.setItem(FAVORITES_KEY, JSON.stringify(favorites));
     } catch (error) {

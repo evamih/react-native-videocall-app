@@ -7,6 +7,7 @@ import { Link, useRouter } from 'expo-router';
 import { ImageBackground } from 'stream-chat-expo';
 import prompt from 'react-native-prompt-android';
 import Device from 'expo-device';
+import { useAuth } from '@/context/AuthContext';
 
 import { getFavorites } from '@/app/utils/AsyncStorage';
 
@@ -17,12 +18,15 @@ const Page = () =>{
 
   const router = useRouter();
   const [favorites, setFavorites] = useState<{ id: string; name: string; photo: string }[]>([]);
-  //const {favorites} = useFavorites();
+  const {authState} = useAuth();
+  const userId = authState?.user_id;
 
   useEffect(() => {
     const loadFavorites = async () => {
         const storedFavorites = await getFavorites();
-        setFavorites(storedFavorites);
+        const userFavorites = storedFavorites.filter((favorite: { userId: string | null | undefined; }) => favorite.userId === userId);
+        setFavorites(userFavorites);
+        //setFavorites(storedFavorites);
     };
     loadFavorites();
   }, []);
@@ -55,19 +59,19 @@ const Page = () =>{
       <ScrollView style={styles.container}>
         <View style={{ flexDirection: 'row'}}>
           <TouchableOpacity onPress={onStartMeeting} style={styles.button}>
-            <Ionicons name="videocam-outline" size={22} color={Colors.victoria}/>
+            <Ionicons name="videocam-outline" size={22} color={Colors.mediu2}/>
             <Text style={styles.buttonText}>Start a meeting!</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={onJoinMeeting} style={styles.button}>
-            <Ionicons name="videocam-outline" size={22} color={Colors.victoria}/>
+            <Ionicons name="videocam-outline" size={22} color={Colors.mediu2}/>
             <Text style={styles.buttonText}>Join a meeting!</Text>
           </TouchableOpacity>
         </View>
 
         <View style={styles.divider}>
-          <View style={{ flex: 1, height: StyleSheet.hairlineWidth, backgroundColor: Colors.victoria }} />
-            <Text style={{ fontSize: 18, color: Colors.victoria, fontWeight: 'condensedBold' }}>or join public room</Text>
-          <View style={{ flex: 1, height: StyleSheet.hairlineWidth, backgroundColor: Colors.victoria }} />
+          <View style={{ flex: 1, height: StyleSheet.hairlineWidth, backgroundColor: Colors.inchis }} />
+            <Text style={{ fontSize: 18, color: Colors.inchis, fontWeight: 'condensedBold' }}>or join public room</Text>
+          <View style={{ flex: 1, height: StyleSheet.hairlineWidth, backgroundColor: Colors.inchis }} />
 			  </View>
 
         <View style={styles.wrapper}>
@@ -84,12 +88,12 @@ const Page = () =>{
           ))}
         </View>
 
-        {favorites.length > 0 && (
+        {(favorites.length > 0) && (
         <>
           <View style={styles.divider}>
-            <View style={{ flex: 1, height: StyleSheet.hairlineWidth, backgroundColor: Colors.victoria }} />
-            <Text style={{ fontSize: 18, color: Colors.victoria, fontWeight: 'condensedBold' }}>your saved meetings</Text>
-            <View style={{ flex: 1, height: StyleSheet.hairlineWidth, backgroundColor: Colors.victoria }} />
+            <View style={{ flex: 1, height: StyleSheet.hairlineWidth, backgroundColor: Colors.inchis }} />
+            <Text style={{ fontSize: 18, color: Colors.inchis, fontWeight: 'condensedBold' }}>your saved meetings</Text>
+            <View style={{ flex: 1, height: StyleSheet.hairlineWidth, backgroundColor: Colors.inchis }} />
           </View>
           <View style={styles.wrapper}>
             {favorites.map((favorite, index) => (
@@ -186,8 +190,8 @@ const styles = StyleSheet.create({
 		flexDirection: 'row',
 		alignItems: 'center',
 		justifyContent: 'center',
-		backgroundColor: Colors.tertiary,
-    marginTop: 20,
+		backgroundColor: Colors.deschis,
+    marginTop: 30,
 		margin: 10,
 		padding: 20,
 		borderRadius: 10,
@@ -195,7 +199,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     fontSize: 17,
-    color: Colors.victoria,
+    color: Colors.mediu2,
     fontWeight: 'bold',
     marginRight: 5,
     justifyContent: 'center',

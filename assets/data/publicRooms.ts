@@ -1,17 +1,17 @@
 export const rooms = [
 	{
-		id: 10001,
+		id: 10004,
 		name: 'Public Informations',
 		img: require('../images/room1.png')
 	},
 	{
 		id: 10002,
-		name: 'Crazy people',
+		name: 'Travel buddies',
 		img: require('../images/room2.png')
 	},
 	{
 		id: 10003,
-		name: 'Ghibli Fans',
+		name: 'Cocktail lovers',
 		img: require('../images/room3.png')
 	}
 ];

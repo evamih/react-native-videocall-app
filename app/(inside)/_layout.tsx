@@ -1,6 +1,6 @@
-import { View, Text, TouchableOpacity, Alert, Button, Pressable, StyleSheet} from 'react-native';
-import React, { useEffect, useState } from 'react';
-import { Redirect, Stack, useRouter, useSegments } from 'expo-router';
+import { View, Text, Alert, Pressable, StyleSheet} from 'react-native';
+import React, { useState } from 'react';
+import { Stack, useRouter, useSegments } from 'expo-router';
 import Colors from '@/constants/Colors';
 import { useAuth } from '@/context/AuthContext';
 import { Ionicons} from '@expo/vector-icons';
@@ -18,7 +18,7 @@ const Layout = () => {
             {
               text: 'Cancel',
               onPress: () => {},
-              style: 'cancel', //here
+              style: 'cancel',
             },
             {text: 'OK', onPress: async () => {
                 console.log('OK Pressed')
@@ -32,7 +32,8 @@ const Layout = () => {
   return (
         <Stack screenOptions={{
             headerStyle: {
-                backgroundColor: Colors.secondary
+                backgroundColor: Colors.mediu,
+                
             },
             headerTintColor: Colors.tertiary,
         }}>
@@ -61,18 +62,21 @@ const styles = StyleSheet.create({
         alignContent: 'center',
         paddingHorizontal: 10,
         paddingVertical: 10,
-        backgroundColor: Colors.secondary,
-        shadowRadius: 5,
+        backgroundColor: Colors.mediu,
+        shadowOpacity: 500,
+        shadowRadius: 10,
         shadowColor: 'black',
         elevation: 20,
+        borderRadius: 0,
     },
     headerText: {
         fontSize: 25,
+        fontWeight: '600',
         color: Colors.tertiary,
         flex: 1,
         justifyContent: 'center',
         paddingLeft: 10,
-        textShadowColor: 'grey', 
+        textShadowColor: Colors.mediu2, 
         textShadowOffset: { width: 0.5, height: 0.5 }, 
         textShadowRadius: 1
     },

@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Alert, View, StyleSheet, Text, TouchableOpacity } from 'react-native';
-import { CallControlProps, CallParticipantsSpotlight, CallControls as DefaultCallControls, HangUpCallButton, ParticipantLabel, ParticipantView, ToggleAudioPublishingButton, ToggleCameraFaceButton, ToggleVideoPublishingButton } from '@stream-io/video-react-native-sdk';
+import { CallControlProps, CallControls as DefaultCallControls, HangUpCallButton, ToggleAudioPublishingButton, ToggleCameraFaceButton, ToggleVideoPublishingButton } from '@stream-io/video-react-native-sdk';
 import Colors from '@/constants/Colors';
 import { router } from 'expo-router';
 import { useCallStateHooks } from '@stream-io/video-react-native-sdk';
@@ -20,11 +20,9 @@ const CustomCallControls = (props: CallControlProps) => {
     const stats = useCallStatsReport();
 
     const getCallStats = async () => {
-        const audioStream = stats?.publisherStats.rawReport.streams.find(
-            (stream) => stream.kind === "audio"
-          );
-          if (audioStream) {
-            console.log("Audio Codec:", audioStream.codec);
+        const audioStream = stats?.participants;
+        if (audioStream) {
+            console.log("Audio Codec:", audioStream);
             //Alert.alert("Audio Codec", audioStream.codec);
           } else {
             console.log("No audio stream found.");
@@ -32,8 +30,9 @@ const CustomCallControls = (props: CallControlProps) => {
           }
         const stats1 = stats?.publisherStats.codec;
         const myStats = stats?.publisherStats.rawReport.streams;
+        const stats2 = stats?.subscriberStats.rawReport.streams;
         console.log("Call stats: " + JSON.stringify(stats, null, 2));
-        Alert.alert("Call stats: ", JSON.stringify(myStats, null, 2));
+        Alert.alert("Call stats: ", JSON.stringify(audioStream, null, 2));
     }
     
     return (
@@ -59,15 +58,15 @@ const CustomCallControls = (props: CallControlProps) => {
 
 const styles = StyleSheet.create({
     parent: {
-        backgroundColor: Colors.secondary,
-        color: Colors.secondary,
+        backgroundColor: Colors.mediu,
+        color: Colors.mediu,
         flexDirection: 'row',
     },
     customControls: {
-        backgroundColor: Colors.secondary,
-        color: Colors.secondary, 
+        backgroundColor: Colors.mediu,
+        color: Colors.mediu, 
         paddingTop: 10,
-        paddingBottom: Device.isDevice ? Device.manufacturer !== 'Motorola' ? 130 : 110 : 130,
+        paddingBottom: Device.brand == 'samsung' ? 110 : 130, //110 samsung restul 130
         paddingRight: 0,
         borderRadius: 0,
         paddingLeft: 0,

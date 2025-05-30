@@ -47,9 +47,9 @@ const Page = () => {
             style={styles.container}>
             <Spinner visible={loading}/>
             
-            <Image style={styles.logo} source={require('@/assets/images/logo.png')} />
+            <Image style={styles.logo} source={require('@/assets/images/logo2.png')} />
             <Text style={styles.header}>Log in</Text>
-            <Text style={styles.subHeader}>Welcome to appli :3 !</Text>
+            <Text style={styles.subHeader}>Welcome to my video conference application!</Text>
             <TextInput
                 placeholder='ceva@mail.com'
                 value={email}
@@ -68,7 +68,7 @@ const Page = () => {
                 <Text style={{color: Colors.tertiary}}>Log in</Text>
             </TouchableOpacity>
             <TouchableOpacity style={{alignSelf: 'center', marginTop: 10}} onPress={onSignUpPress}>
-                <Text style={{color: Colors.victoria}}>Don't have an account? Sign up here!</Text>
+                <Text style={{color: '#557a71'}}>Don't have an account? Sign up here!</Text>
             </TouchableOpacity>
         </KeyboardAvoidingView>
     );
@@ -92,23 +92,23 @@ const styles = StyleSheet.create({
     },
     inputField: {
         height: 50,
-        borderColor: Colors.primary,
+        borderColor: '#557a71',
         borderWidth: 1.5,
         borderRadius: 10,
         paddingHorizontal: 10,
         marginBottom: 15,
     },
     logo: {
-        width: 90,
-        height: 90,
+        width: 100,
+        height: 100,
         alignSelf: 'center',
-        marginBottom: 50,
+        marginBottom: 40,
         borderRadius: 20
     },
     button: {
         marginVertical: 10,
         alignItems: 'center',
-        backgroundColor: Colors.secondary,
+        backgroundColor: Colors.mediu,
         padding: 15,
         borderRadius: 4,
         alignContent: 'center',

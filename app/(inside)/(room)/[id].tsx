@@ -1,6 +1,6 @@
-import { Button, Alert, View, Text, Image, TextInput, StyleSheet, Dimensions, Share, TouchableOpacity, TouchableWithoutFeedback, Keyboard } from 'react-native';
+import { Button, Alert, View, StyleSheet, Dimensions, Share, TouchableOpacity, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import React, { useEffect, useState } from 'react';
-import { Call, CallContent, StreamCall, useStreamVideoClient, useCallStateHooks, StreamVideoEvent } from '@stream-io/video-react-native-sdk';
+import { Call, CallContent, StreamCall, useStreamVideoClient, StreamVideoEvent } from '@stream-io/video-react-native-sdk';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { useLocalSearchParams, useNavigation, useRouter } from 'expo-router';
 import CustomCallControls from '@/components/CustomCallControls';
@@ -13,6 +13,7 @@ import * as ImagePicker from 'expo-image-picker';
 
 import { saveFavorites, getFavorites } from '@/app/utils/AsyncStorage';
 import prompt from 'react-native-prompt-android';
+import { useAuth } from '@/context/AuthContext';
 
 
 const Page = () => {
@@ -25,6 +26,8 @@ const Page = () => {
     const { id } = useLocalSearchParams<{ id: string}>();
 
     const [isFavorite, setIsFavorite] = useState(false);
+    const {authState} = useAuth();
+    const userId = authState?.user_id;
 
     const router = useRouter();
     const navigation = useNavigation();
@@ -63,9 +66,6 @@ const Page = () => {
                 <TouchableOpacity onPressOut={addToFavorites}>
                     <Ionicons name={isFavorite ? "heart" : "heart-outline"} size={24} color={Colors.tertiary} />
                 </TouchableOpacity>
-                {/* <TouchableOpacity onPressOut={getCallStats}>
-					<Ionicons name="call-outline" size={24} color={Colors.tertiary} />
-				</TouchableOpacity> */}
                 </View>
 			)
 		});
@@ -206,7 +206,7 @@ const Page = () => {
 
                         if (!result.canceled) {
                             const photoUri = result.assets[0].uri;
-                            const newFavorite = { id, name: name.trim(), photo: photoUri };
+                            const newFavorite = { id, name: name.trim(), photo: photoUri, userId: userId || 'unknown'};
 
                             const currentFavorites = await getFavorites();
                             const updatedFavorites = [...currentFavorites, newFavorite];

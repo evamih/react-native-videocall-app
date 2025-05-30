@@ -1,8 +1,7 @@
 import * as SecureStore from 'expo-secure-store';
 import { createContext, useContext, useEffect, useState } from 'react';
 
-//un clasic auth context, cu secure store
-//nu uita sa check out auth context tutorial 
+//un clasic context de autentificare, cu secure store 
 
 interface AuthProps {
     authState: { 

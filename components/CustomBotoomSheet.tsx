@@ -9,7 +9,6 @@ interface Props {
 	channelId: string;
 }
 
-// Custom Bottom Sheet to display the chat
 const CustomBottomSheet = forwardRef<Ref, Props>((props, ref) => {
 	const snapPoints = useMemo(() => ['15%', '100%'], []);
 
